@@ -22,9 +22,9 @@ class Juego
     @metacritic = metacritic
   end
 
-  def registrar()
+  def registrarSteam()
     CSV.open('juegosSteam.csv','a') do |csv|
-      csv << [@nombre,@imagen,@descuento,@precio,@href,@fechaLanzamiento,@plataformas,@resenia,@bloqueoDeEdad,@descripcion,@etiquetas,@desarrollador,@editor,@genero,@metacritic]
+      csv << [@nombre,@descuento,@precio,@fechaLanzamiento,@plataformas,@resenia,@bloqueoDeEdad,@etiquetas,@desarrollador,@editor,@genero,@metacritic,@href,@imagen,@descripcion]
     end
   end
 

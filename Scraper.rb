@@ -2,9 +2,9 @@
 class Scraper
 
 
-  def extraerDatosJuegoSteam(url)
+  def extraerDatosJuegosSteam(url)
     CSV.open('juegosSteam.csv', 'wb') do |csv|
-      csv << %w[nombre imagen etiquetas descuento precio href fechaLanzamiento plataformas resenia confirmacionDeEdad descripcion etiquetas desarrollador editor enero]
+      csv << %w[nombre descuento precio fechaLanzamiento plataformas resenia bloqueoDeEdad etiquetas desarrollador editor genero metacritic imagen href descipcion]
     end
     pagina = open(url)
     contenido = pagina.read
@@ -100,7 +100,7 @@ class Scraper
 
         editor = ""
         parsedJuego.css(".details_block").css("a").each do |e|
-          if e.attribute("href").value.to_s.include? "https://store.steampowered.com/publisher/" then
+          if e.attribute("href").value.to_s.include? "publisher" then
             if editor!=""
               editor+=" / "+e.inner_text.to_s
             else
@@ -163,55 +163,87 @@ class Scraper
   end
 
   def extraerDatosJuegosFanatical(url)
-    CSV.open('etiquetas.csv', 'wb') do |csv|
-      csv << %w[nombreE html nroDeJuegos]
+    CSV.open('juegosFanatical.csv', 'wb') do |csv|
+      csv << %w[nombre descuento precio plataformas origen etiquetas desarrollador editor genero metacritic imagen href descipcion]
     end
     pagina = open(url)
     contenido = pagina.read
     parsed = Nokogiri::HTML(contenido)
+    parsed.css(".card-container").each do |datos|
 
-    #por cada fila
-    parsed.css("#TagFilter_Container").css(".tab_filter_control_row").each do |datos|
+      href = "https://www.fanatical.com"+datos.css(".faux-block-link__overlay-link").attribute("href").value.to_s
 
-      #nombreE html nroDeJuegos
-      nombreE = datos.attribute("data-loc").value
-      html = datos.attribute("data-value").value
-      nroDeJuegos = datos.css("span")
-      puts nroDeJuegos
+      nombre = datos.css(".faux-block-link__overlay-link").inner_text
+
+      descuento = (100-(datos.css(".card-saving").css("div").inner_text.gsub(/\s+/,"").gsub("Hasta", "").gsub("-", "").split("%")[0]).to_i).to_s+"%"
+
+      paginaJuego = open(href)
+      contenidoJuego = paginaJuego.read
+      parsedJuego = Nokogiri::HTML(contenidoJuego)
+
+      precio = (parsedJuego.css(".p-3").css(".was-price").inner_text.gsub(",",".").to_i* 1.37121).round(2)
+
+      plataformas = ""
+      parsedJuego.css(".platforms-container").css(".svg-inline--fa").each do |p|
+        platf = p.attribute("data-icon").to_s
+        if platf=="windows" then
+          plataformas+="windows "
+        end
+        if platf=="apple" then
+          if plataformas=="" then
+            plataformas+="mac "
+          else
+            plataformas+="/ mac"
+          end
+        end
+        if platf=="linux" then
+          if plataformas=="" then
+            plataformas+="linux "
+          else
+            plataformas+="/ linux"
+          end
+        end
+      end
+
+      descripcion = parsedJuego.css(".section-margin-bottom").css("p").inner_text
+
+      imagen = parsedJuego.css(".responsive-image").css("img").attribute("srcset").to_s.split(" ")[0]
+
+      if precio!=0 then           #si no tiene precio, no es juego
+        origen = parsedJuego.css(".p-3").css(".drm-container").css("img").attribute("alt").value.to_s.split(" ")[0]
+
+        genero=""
+        parsedJuego.css(".card-body").css(".col-sm-9").css(".text-capitalize").css("a").each do |g|
+          genero=g.inner_text
+        end
+
+        puts href
+
+      end
+
+
+
       gets()
 
-
     end
-  end
-
-  def extraerDatosEneba(url)
-    urlEneba="https://www.eneba.com/latam/store/games"
 
 
-    CSV.open('archivo.csv', 'wb') do |csv|
-      csv << %w[cosas]
-    end
-    pagina = open(url)
-    contenido = pagina.read
-    parsed = Nokogiri::HTML(contenido)
-
-    parsed.css("section").css("div._3M7T08").css("._2rxjGA").each do |datos|
-      puts datos.css("._2vZ2Ja").css("img").attribute("alt").value
-      puts datos.css("._1LGeh3").inner_text
-      puts datos.css("._2idjXd").inner_text
-      puts datos.css("._2idjXd").attribute("href").value
 
 
-      pagina = open("https://www.eneba.com"+datos.css("._2idjXd").attribute("href").value.to_s)
-      contenido = pagina.read
-      parsed = Nokogiri::HTML(contenido)
-      puts parsed.css("._1M1Xz8").css("strong").inner_text
 
-      gets()
-    end
+    #nombre imagen descuento precio href fechaLanzamiento plataformas resenia confirmacionDeEdad
+    #/descripcion /etiquetas /desarrollador /editor /genero
+
+
+
+
+
+
+
 
 
   end
+
 
 end
 
