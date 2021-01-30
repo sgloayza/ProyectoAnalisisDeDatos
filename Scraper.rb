@@ -4,7 +4,7 @@ class Scraper
 
 
   def extraerDatosJuegosSteam(url)
-    CSV.open('juegosSteam.csv', 'wb') do |csv|
+    CSV.open('juegosSteam.csv', 'a') do |csv|
       csv << %w[nombre descuento precio fechaLanzamiento plataformas resenia bloqueoDeEdad etiquetas desarrollador editor genero metacritic herf imagen descipcion]
     end
     pagina = open(url)
