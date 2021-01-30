@@ -9,7 +9,7 @@ class Etiqueta
   end
 
   def registrar()
-    CSV.open('etiquetas.csv','a') do |csv|
+    CSV.open('Graficos/etiquetas.csv','a') do |csv|
       csv << [@nombreE,@codigo,@nroDeJuegos]
     end
   end

@@ -26,14 +26,14 @@ class Juego
 
 
   def registrarSteam()
-    CSV.open('juegosSteam.csv','a') do |csv|
+    CSV.open('Graficos/juegosSteam.csv','a') do |csv|
       csv << [@nombre,@descuento,@precio,@fechaLanzamiento,@plataformas,@resenia,@bloqueoDeEdad,@etiquetas,@desarrollador,@editor,@genero,@metacritic,@href,@imagen,@descripcion]
     end
   end
 
 
   def registrarFanatical()
-    CSV.open('juegosFanatical.csv','a') do |csv|
+    CSV.open('Graficos/juegosFanatical.csv','a') do |csv|
       csv << [@nombre,@descuento,@precio,@plataformas,@origen,@genero,@href,@imagen,@descripcion]
     end
   end

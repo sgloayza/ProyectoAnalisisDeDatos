@@ -3,7 +3,7 @@ class Scraper
 
 
   def extraerDatosEtiquetasSteam(url)
-    CSV.open('etiquetas.csv', 'wb') do |csv|
+    CSV.open('Graficos/etiquetas.csv', 'wb') do |csv|
       csv << %w[nombreE html nroDeJuegos]
     end
     pagina = open(url)
@@ -267,12 +267,12 @@ class Scraper
 
 
   def crearArchivoJuegosSteam()
-    CSV.open('juegosSteam.csv', 'wb') do |csv|
+    CSV.open('Graficos/juegosSteam.csv', 'wb') do |csv|
       csv << %w[nombre descuento precio fechaLanzamiento plataformas resenia bloqueoDeEdad etiquetas desarrollador editor genero metacritic herf imagen descipcion]
     end
   end
   def crearArchivoJuegosFanatical()
-    CSV.open('juegosFanatical.csv', 'wb') do |csv|
+    CSV.open('Graficos/juegosFanatical.csv', 'wb') do |csv|
       csv << %w[nombre descuento precio plataformas origen genero href imagen descripcion]
     end
   end
