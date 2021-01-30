@@ -1,12 +1,55 @@
-require 'set'
 
 class Scraper
 
 
-  def extraerDatosJuegosSteam(url)
-    CSV.open('juegosSteam.csv', 'wb') do |csv|
-      csv << %w[nombre descuento precio fechaLanzamiento plataformas resenia bloqueoDeEdad etiquetas desarrollador editor genero metacritic herf imagen descipcion]
+  def extraerDatosEtiquetasSteam(url)
+    CSV.open('etiquetas.csv', 'wb') do |csv|
+      csv << %w[nombreE html nroDeJuegos]
     end
+    pagina = open(url)
+    contenido = pagina.read
+    parsed = Nokogiri::HTML(contenido)
+
+
+
+
+    #por cada fila
+    parsed.css("div#TagFilter_Container").css(".tab_filter_control_row").each do |datos|
+      #nombreE html nroDeJuegos
+      nombreE = datos.attribute("data-loc").value.to_s
+      codigo = datos.attribute("data-value").value.to_s
+
+
+      paginaFiltrada = open("https://store.steampowered.com/search/?tags="+codigo+"?sort_by=&sort_order=0&page=1")
+      contenidoFiltrado = paginaFiltrada.read
+      parsedFiltrado = Nokogiri::HTML(contenidoFiltrado)
+      nro1 = parsedFiltrado.css(".search_results_filtered_warning").inner_text.to_s
+
+      if nro1!="" then
+        nro1 = nro1.gsub(/\s+/," ").split("results")[0].gsub(",","").to_i
+      else
+        nro1 = parsedFiltrado.css(".search_results").css(".search_results_count").inner_text.to_i
+      end
+
+      nro2 = parsedFiltrado.css(".search_results_filtered_warning").inner_text.to_s
+
+      if nro2=!"" then
+        nro2 = nro2.gsub(/\s+/," ").split("results")[0].gsub(",","").to_i
+      else
+        nro2 = 0
+      end
+
+      nroDeJuegos = (nro1+nro2).to_s
+
+      et = Etiqueta.new(nombreE,codigo,nroDeJuegos)
+      et.toString()
+      et.registrar()
+    end
+  end
+
+
+
+  def extraerDatosJuegosSteam(url)
     pagina = open(url)
     contenido = pagina.read
     parsed = Nokogiri::HTML(contenido)
@@ -132,55 +175,10 @@ class Scraper
     end
   end
 
-  def extraerDatosEtiquetasSteam(url)
-    CSV.open('etiquetas.csv', 'wb') do |csv|
-      csv << %w[nombreE html nroDeJuegos]
-    end
-    pagina = open(url)
-    contenido = pagina.read
-    parsed = Nokogiri::HTML(contenido)
 
 
-
-
-    #por cada fila
-    parsed.css("div#TagFilter_Container").css(".tab_filter_control_row").each do |datos|
-      #nombreE html nroDeJuegos
-      nombreE = datos.attribute("data-loc").value.to_s
-      codigo = datos.attribute("data-value").value.to_s
-
-
-      paginaFiltrada = open("https://store.steampowered.com/search/?tags="+codigo+"?sort_by=&sort_order=0&page=1")
-      contenidoFiltrado = paginaFiltrada.read
-      parsedFiltrado = Nokogiri::HTML(contenidoFiltrado)
-      nro1 = parsedFiltrado.css(".search_results_filtered_warning").inner_text.to_s
-
-      if nro1!="" then
-        nro1 = nro1.gsub(/\s+/," ").split("results")[0].gsub(",","").to_i
-      else
-        nro1 = parsedFiltrado.css(".search_results").css(".search_results_count").inner_text.to_i
-      end
-
-      nro2 = parsedFiltrado.css(".search_results_filtered_warning").inner_text.to_s
-
-      if nro2=!"" then
-        nro2 = nro2.gsub(/\s+/," ").split("results")[0].gsub(",","").to_i
-      else
-        nro2 = 0
-      end
-
-      nroDeJuegos = (nro1+nro2).to_s
-
-      et = Etiqueta.new(nombreE,codigo,nroDeJuegos)
-      et.toString()
-      et.registrar()
-    end
-  end
 
   def extraerDatosJuegosFanatical(url)
-    CSV.open('juegosFanatical.csv', 'wb') do |csv|
-      csv << %w[nombre descuento precio plataformas origen genero href imagen descripcion]
-    end
     pagina = open(url)
     contenido = pagina.read
     parsed = Nokogiri::HTML(contenido)
@@ -192,15 +190,15 @@ class Scraper
 
       #puts href+" "+nombre
 
-      descuento = (100-(datos.css(".card-saving").css("div").inner_text.gsub(/\s+/,"").gsub("Hasta", "").gsub("-", "").split("%")[0]).to_i).to_s+"%"
+      descuento = (datos.css(".card-saving").css("div").inner_text.gsub(/\s+/,"").gsub("Hasta", "").gsub("-", "").split("%")[0].to_i).to_s+"%"
+
+
 
       paginaJuego = open(href)
       contenidoJuego = paginaJuego.read
       parsedJuego = Nokogiri::HTML(contenidoJuego)
 
       precio = (parsedJuego.css(".price-container").css(".was-price").inner_text.gsub("£","").to_i* 1.37121).round(2)
-
-
 
 
       plataformas = ""
@@ -265,6 +263,20 @@ class Scraper
     end
 
   end
+
+
+
+  def crearArchivoJuegosSteam()
+    CSV.open('juegosSteam.csv', 'wb') do |csv|
+      csv << %w[nombre descuento precio fechaLanzamiento plataformas resenia bloqueoDeEdad etiquetas desarrollador editor genero metacritic herf imagen descipcion]
+    end
+  end
+  def crearArchivoJuegosFanatical()
+    CSV.open('juegosFanatical.csv', 'wb') do |csv|
+      csv << %w[nombre descuento precio plataformas origen genero href imagen descripcion]
+    end
+  end
+
 
 
 end

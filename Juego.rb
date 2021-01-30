@@ -3,7 +3,6 @@ class Juego
   attr_accessor :nombre, :imagen, :descuento, :precio, :href, :fechaLanzamiento, :plataformas, :resenia, :bloqueoDeEdad, :descripcion, :etiquetas, :desarrollador, :editor, :genero,:metacritic,:origen
 
 
-
   def initialize(nombre,descuento,precio,plataformas,genero,href,imagen,descripcion,
                  fechaLanzamiento="",resenia="",bloqueoDeEdad="",etiquetas="",
                  desarrollador="",editor="",metacritic="",origen="")
@@ -24,6 +23,7 @@ class Juego
     @metacritic = metacritic
     @origen = "Steam"
   end
+
 
   def registrarSteam()
     CSV.open('juegosSteam.csv','a') do |csv|
