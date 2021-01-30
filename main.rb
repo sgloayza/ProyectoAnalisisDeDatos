@@ -9,6 +9,9 @@ require "./ScraperSteam"
 require "./ScraperFanatical"
 
 
+
+
+
 #------------Steam
 
 #url
@@ -26,18 +29,26 @@ for i in 1..5
 end
 
 
+
+
+
+
 #------------Fanatical
 
 #url
-#urlFanatical = "https://www.fanatical.com/en/search?page="
+urlFanatical = "https://www.fanatical.com/en/search?page="
 
 #crea archivo
 #ScraperFanatical.new.crearArchivoJuegos
 
 for i in 1..5
   #Para obtener juegosFanatical.csv
-  #ScraperFanatical.new.extraerDatosJuegos(urlFanatical+i.to_s)
+  ScraperFanatical.new.extraerDatosJuegos(urlFanatical+i.to_s)
 end
+
+
+
+
 
 
 #------------Eneba

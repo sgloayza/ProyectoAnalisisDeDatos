@@ -1,11 +1,11 @@
 
 class Juego
-  attr_accessor :nombre, :imagen, :descuento, :precio, :href, :fechaLanzamiento, :plataformas, :resenia, :bloqueoDeEdad, :descripcion, :etiquetas, :desarrollador, :editor, :genero,:metacritic,:origen
+  attr_accessor :nombre, :imagen, :descuento, :precio, :href, :fechaLanzamiento, :plataformas, :resenia, :bloqueoDeEdad, :descripcion, :etiquetas, :desarrollador, :editor, :genero,:metacritic,:origen,:usuarioCompraron
 
 
   def initialize(nombre,descuento,precio,plataformas,genero,href,imagen,descripcion,
                  fechaLanzamiento="",resenia="",bloqueoDeEdad="",etiquetas="",
-                 desarrollador="",editor="",metacritic="",origen="")
+                 desarrollador="",editor="",metacritic="",origen="Steam",usuarioCompraron="")
     @nombre = nombre
     @descuento = descuento
     @precio = precio
@@ -19,15 +19,16 @@ class Juego
     @bloqueoDeEdad=bloqueoDeEdad
     @etiquetas=etiquetas
     @desarrollador=desarrollador
-    @editor=editor
+    @editor= editor
     @metacritic = metacritic
-    @origen = "Steam"
+    @origen = origen
+    @usuarioCompraron = usuarioCompraron
   end
 
 
   def registrarSteam()
     CSV.open('Graficos/juegosSteam.csv','a') do |csv|
-      csv << [@nombre,@descuento,@precio,@fechaLanzamiento,@plataformas,@resenia,@bloqueoDeEdad,@etiquetas,@desarrollador,@editor,@genero,@metacritic,@href,@imagen,@descripcion]
+      csv << [@nombre,@descuento,@precio,@fechaLanzamiento,@usuarioCompraron,@plataformas,@resenia,@bloqueoDeEdad,@etiquetas,@desarrollador,@editor,@genero,@metacritic,@href,@imagen,@descripcion]
     end
   end
 
@@ -62,7 +63,8 @@ class Juego
            "\nEditor= "+@editor+
            "\nGénero= "+@genero+
            "\nMetacritic= "+@metacritic+
-           "\nOrigen= "+@origen
+           "\nOrigen= "+@origen+
+           "\n@UsuarioCompraron= "+@usuarioCompraron
   end
 
 

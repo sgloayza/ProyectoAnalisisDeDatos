@@ -55,9 +55,6 @@ class ScraperSteam
 
     #por cada fila
     parsed.css("a.search_result_row").each do |datos|
-
-      #nombre imagen descuento precio href fechaLanzamiento plataformas resenia confirmacionDeEdad
-      #/descripcion /etiquetas /desarrollador /editor /genero
       nombre = datos.css("span.title").inner_text
       imagen = datos.css("img").attribute("src").inner_text
       descuento = datos.css("div.search_discount").css("span").inner_text
@@ -112,7 +109,7 @@ class ScraperSteam
       bloqueoDeEdad = (parsedJuego.css(".apphub_AppName").inner_text != nombre)   #true si hay bloqueo
 
       juego=Juego.new(nombre,descuento,precio,plataformas,"",href,imagen,"",
-        fechaLanzamiento,resenia,bloqueoDeEdad,"","","","","Steam")
+        fechaLanzamiento,resenia,bloqueoDeEdad,"","","","","Steam","")
 
       if !bloqueoDeEdad then
         descripcion = parsedJuego.css(".game_description_snippet").inner_text.gsub(/\s+/," ")
@@ -168,6 +165,14 @@ class ScraperSteam
         metacritic = parsedJuego.css(".score").inner_text.gsub(/\s+/,"")
         juego.metacritic = metacritic
 
+        usuarioCompraron=""
+        parsedJuego.css(".review_ctn").css("#reviews_filter_options").css(".user_reviews_count").each do |c|
+          usuarioCompraron = c.inner_text.gsub(",","").gsub("(","").gsub(")","").to_s
+          puts usuarioCompraron
+          break
+        end
+        juego.usuarioCompraron=usuarioCompraron
+
       end
       juego.toString
       juego.registrarSteam
@@ -177,7 +182,7 @@ class ScraperSteam
 
   def crearArchivoJuegos()
     CSV.open('Graficos/juegosSteam.csv', 'wb') do |csv|
-      csv << %w[nombre descuento precio fechaLanzamiento plataformas resenia bloqueoDeEdad etiquetas desarrollador editor genero metacritic herf imagen descipcion]
+      csv << %w[nombre descuento precio fechaLanzamiento usuarioCompraron plataformas resenia bloqueoDeEdad etiquetas desarrollador editor genero metacritic herf imagen descipcion]
     end
   end
 
