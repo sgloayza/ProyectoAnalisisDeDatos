@@ -100,4 +100,4 @@ def scatterplot2():
 
 
 
-scatterplot()
+scatterplot1()

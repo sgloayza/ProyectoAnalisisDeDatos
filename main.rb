@@ -5,23 +5,50 @@ require "set"
 
 require "./Juego"
 require "./Etiqueta"
-require "./Scraper"
+require "./ScraperSteam"
+require "./ScraperFanatical"
 
-#urls
-urlSteam = "https://store.steampowered.com/search/?sort_by=&sort_order=0&page="
-urlFanatical = "https://www.fanatical.com/en/search?page="
 
-#crea archivos
-Scraper.new.crearArchivoJuegosSteam
-Scraper.new.crearArchivoJuegosFanatical
+#------------Steam
+
+#url
+#urlSteam = "https://store.steampowered.com/search/?sort_by=&sort_order=0&page="
+
+#crea archivo
+#ScraperSteam.new.crearArchivoJuegos
 
 #Para obtener etiquetas.csv
-Scraper.new.extraerDatosEtiquetasSteam(urlSteam)
+#ScraperSteam.new.extraerDatosEtiquetas(urlSteam)
 
-for i in 1..5                                           #Podemos un max o sacamos el maximo?
+for i in 1..5
   #Para obtener juegosSteam.csv
-  Scraper.new.extraerDatosJuegosSteam(urlSteam+i.to_s)
+  #ScraperSteam.new.extraerDatosJuegos(urlSteam+i.to_s)
+end
 
+
+#------------Fanatical
+
+#url
+#urlFanatical = "https://www.fanatical.com/en/search?page="
+
+#crea archivo
+#ScraperFanatical.new.crearArchivoJuegos
+
+for i in 1..5
   #Para obtener juegosFanatical.csv
-  Scraper.new.extraerDatosJuegosFanatical(urlFanatical+i.to_s)
+  #ScraperFanatical.new.extraerDatosJuegos(urlFanatical+i.to_s)
+end
+
+
+#------------Eneba
+
+#url
+urlFanatical = "https://www.eneba.com/latam/store?page="
+
+#crea archivo
+#ScraperEneba.new.crearArchivoJuegos
+
+for i in 1..5
+  #Para obtener juegosFanatical.csv
+  #ScraperEneba.new.extraerDatosJuegos(urlEneba+i.to_s)
 end

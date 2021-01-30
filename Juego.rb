@@ -39,6 +39,13 @@ class Juego
   end
 
 
+  def registrarEneba()
+    CSV.open('Graficos/juegosEneba.csv','a') do |csv|
+      csv << [@nombre,@descuento,@precio,@plataformas,@origen,@genero,@href,@imagen,@descripcion]
+    end
+  end
+
+
   def toString()
     puts "Nombre= "+@nombre+
            "\nImagen= "+@imagen+
