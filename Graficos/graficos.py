@@ -19,7 +19,7 @@ def scatterplot1():
     plt.title("Regresión lineal simple")
     plt.tight_layout()
     plt.show()
-scatterplot1()
+#scatterplot1()
 # Ranking de géneros
 def barplot1():
 
@@ -49,7 +49,7 @@ def barplot1():
     plt.xlabel('Número de Juegos')
     plt.ylabel('Géneros')
     plt.show()
-barplot1()
+#barplot1()
 
 
 

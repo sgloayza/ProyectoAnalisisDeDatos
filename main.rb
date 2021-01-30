@@ -18,14 +18,14 @@ require "./ScraperFanatical"
 urlSteam = "https://store.steampowered.com/search/?sort_by=&sort_order=0&page="
 
 #crea archivo
-#ScraperSteam.new.crearArchivoJuegos
+ScraperSteam.new.crearArchivoJuegos
 
 #Para obtener etiquetas.csv
 #ScraperSteam.new.extraerDatosEtiquetas(urlSteam)
 
-for i in 1..5
+for i in 1..25
   #Para obtener juegosSteam.csv
-  #ScraperSteam.new.extraerDatosJuegos(urlSteam+i.to_s)
+  ScraperSteam.new.extraerDatosJuegos(urlSteam+i.to_s)
 end
 
 

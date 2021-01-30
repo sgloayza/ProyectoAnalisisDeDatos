@@ -99,7 +99,7 @@ class ScraperSteam
         end
       end
 
-      resenia = datos.css(".search_review_summary").attribute("data-tooltip-html").value.gsub("<br>"," / ").gsub(" the","").split(" user ")[0].to_s
+      resenia = datos.css(".search_review_summary").attribute("data-tooltip-html")
 
 
       #por cada juego
