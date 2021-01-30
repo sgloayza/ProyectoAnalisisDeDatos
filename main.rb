@@ -10,9 +10,8 @@ require "./Scraper"
 
 
 urlSteam = "https://store.steampowered.com/search/?sort_by=&sort_order=0&page="
-urlFanatical = "https://www.fanatical.com/es/search?page="
+urlFanatical = "https://www.fanatical.com/en/search?page="
 urlEneba = "https://www.eneba.com/latam/store/games"
-
 
 
 #Scraper.new.extraerDatosEtiquetasSteam(urlSteam)       #Para obtener etiquetas.csv

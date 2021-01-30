@@ -1,10 +1,11 @@
+require 'set'
 
 class Scraper
 
 
   def extraerDatosJuegosSteam(url)
     CSV.open('juegosSteam.csv', 'wb') do |csv|
-      csv << %w[nombre descuento precio fechaLanzamiento plataformas resenia bloqueoDeEdad etiquetas desarrollador editor genero metacritic imagen href descipcion]
+      csv << %w[nombre descuento precio fechaLanzamiento plataformas resenia bloqueoDeEdad etiquetas desarrollador editor genero metacritic herf imagen descipcion]
     end
     pagina = open(url)
     contenido = pagina.read
@@ -68,10 +69,10 @@ class Scraper
       parsedJuego = Nokogiri::HTML(contenidoJuego)
       bloqueoDeEdad = (parsedJuego.css(".apphub_AppName").inner_text != nombre)   #true si hay bloqueo
 
-      juego=Juego.new(nombre,imagen,descuento,precio,href,fechaLanzamiento,plataformas,resenia,bloqueoDeEdad.to_s,"","","","","","")
+      juego=Juego.new(nombre,descuento,precio,plataformas,"",href,imagen,"",
+        fechaLanzamiento,resenia,bloqueoDeEdad,"","","","","Steam")
 
       if !bloqueoDeEdad then
-        puts "fgdfsgdfgdfgsd"
         descripcion = parsedJuego.css(".game_description_snippet").inner_text.gsub(/\s+/," ")
 
         juego.descripcion = descripcion
@@ -126,8 +127,8 @@ class Scraper
         juego.metacritic = metacritic
 
       end
-      juego.toString()
-      juego.registrar()
+      juego.toString
+      juego.registrarSteam
     end
   end
 
@@ -149,11 +150,25 @@ class Scraper
       codigo = datos.attribute("data-value").value.to_s
 
 
-      paginaFiltrada = open("https://store.steampowered.com/search/?sort_by=&sort_order=0&page=1?tags="+codigo)
+      paginaFiltrada = open("https://store.steampowered.com/search/?tags="+codigo+"?sort_by=&sort_order=0&page=1")
       contenidoFiltrado = paginaFiltrada.read
       parsedFiltrado = Nokogiri::HTML(contenidoFiltrado)
-      nro1 = parsedFiltrado.css(".search_results_filtered_warning").inner_text.gsub(/\s+/," ").split("results")[0].gsub(",","").to_i
-      nro2 = parsedFiltrado.css(".search_results_filtered_warning").inner_text.gsub(/\s+/," ").split("results")[1].split(". ")[1].split(" titles")[0].gsub(",","").to_i
+      nro1 = parsedFiltrado.css(".search_results_filtered_warning").inner_text.to_s
+
+      if nro1!="" then
+        nro1 = nro1.gsub(/\s+/," ").split("results")[0].gsub(",","").to_i
+      else
+        nro1 = parsedFiltrado.css(".search_results").css(".search_results_count").inner_text.to_i
+      end
+
+      nro2 = parsedFiltrado.css(".search_results_filtered_warning").inner_text.to_s
+
+      if nro2=!"" then
+        nro2 = nro2.gsub(/\s+/," ").split("results")[0].gsub(",","").to_i
+      else
+        nro2 = 0
+      end
+
       nroDeJuegos = (nro1+nro2).to_s
 
       et = Etiqueta.new(nombreE,codigo,nroDeJuegos)
@@ -164,7 +179,7 @@ class Scraper
 
   def extraerDatosJuegosFanatical(url)
     CSV.open('juegosFanatical.csv', 'wb') do |csv|
-      csv << %w[nombre descuento precio plataformas origen etiquetas desarrollador editor genero metacritic imagen href descipcion]
+      csv << %w[nombre descuento precio plataformas origen genero href imagen descripcion]
     end
     pagina = open(url)
     contenido = pagina.read
@@ -175,6 +190,8 @@ class Scraper
 
       nombre = datos.css(".faux-block-link__overlay-link").inner_text
 
+      #puts href+" "+nombre
+
       descuento = (100-(datos.css(".card-saving").css("div").inner_text.gsub(/\s+/,"").gsub("Hasta", "").gsub("-", "").split("%")[0]).to_i).to_s+"%"
 
       paginaJuego = open(href)
@@ -183,6 +200,7 @@ class Scraper
 
       precio = (parsedJuego.css(".p-3").css(".was-price").inner_text.gsub(",",".").to_i* 1.37121).round(2)
 
+      #puts precio
       plataformas = ""
       parsedJuego.css(".platforms-container").css(".svg-inline--fa").each do |p|
         platf = p.attribute("data-icon").to_s
@@ -212,35 +230,30 @@ class Scraper
       if precio!=0 then           #si no tiene precio, no es juego
         origen = parsedJuego.css(".p-3").css(".drm-container").css("img").attribute("alt").value.to_s.split(" ")[0]
 
-        genero=""
+        genero= Set[]
         parsedJuego.css(".card-body").css(".col-sm-9").css(".text-capitalize").css("a").each do |g|
-          genero=g.inner_text
+          genero.add(g.inner_text.to_s)
+        end
+        generos = ""
+        genero.each do |gen|
+          if generos=="" then
+            generos+=gen
+          else
+            generos+=" / "+gen
+          end
         end
 
-        puts href
+
+        juego=Juego.new(nombre,descuento,precio.to_s,plataformas,generos,href,imagen,descripcion,
+                      "","","","","","",
+                      "",origen)
+        juego.toString
+        juego.registrarFanatical
+
 
       end
 
-
-
-      gets()
-
     end
-
-
-
-
-
-    #nombre imagen descuento precio href fechaLanzamiento plataformas resenia confirmacionDeEdad
-    #/descripcion /etiquetas /desarrollador /editor /genero
-
-
-
-
-
-
-
-
 
   end
 
