@@ -15,7 +15,7 @@ require "./ScraperFanatical"
 #------------Steam
 
 #url
-#urlSteam = "https://store.steampowered.com/search/?sort_by=&sort_order=0&page="
+urlSteam = "https://store.steampowered.com/search/?sort_by=&sort_order=0&page="
 
 #crea archivo
 #ScraperSteam.new.crearArchivoJuegos
@@ -43,7 +43,7 @@ urlFanatical = "https://www.fanatical.com/en/search?page="
 
 for i in 1..5
   #Para obtener juegosFanatical.csv
-  ScraperFanatical.new.extraerDatosJuegos(urlFanatical+i.to_s)
+  #ScraperFanatical.new.extraerDatosJuegos(urlFanatical+i.to_s)
 end
 
 
@@ -54,7 +54,7 @@ end
 #------------Eneba
 
 #url
-urlFanatical = "https://www.eneba.com/latam/store?page="
+urlEneba = "https://www.eneba.com/latam/store?page="
 
 #crea archivo
 #ScraperEneba.new.crearArchivoJuegos

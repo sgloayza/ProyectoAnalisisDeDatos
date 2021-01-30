@@ -76,12 +76,15 @@ class ScraperFanatical
           end
         end
 
+
+
         juego=Juego.new(nombre,descuento,precio.to_s,plataformas,generos,href,imagen,descripcion,
                       "","","","","","",
                       "",origen,"")
         juego.toString
         juego.registrarFanatical
 
+        gets()
       end
 
     end
