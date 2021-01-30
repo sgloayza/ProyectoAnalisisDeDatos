@@ -6,8 +6,22 @@ import seaborn as sns
 import warnings; warnings.filterwarnings(action='once')
 
 
+# STEAM
+# Correlación entre variables calificacion Metacritic y precio
+def scatterplot1():
+    df = pd.read_csv("juegosSteam.csv")
+    df = df[df.metacritic.notnull()]
+    df = df[df["precio"]>0]
+    df = df[df["metacritic"] > 0]
+    sns.set_style("ticks")
+    gridobj = sns.lmplot(x="metacritic", y="precio", data=df, height=5, aspect=11/5)
+    gridobj.set(xlim=(55, 95), ylim=(0, 65))
+    plt.title("Regresión lineal simple")
+    plt.tight_layout()
+    plt.show()
+scatterplot1()
 # Ranking de géneros
-def barplot():
+def barplot1():
 
     # Crear método para la lectura
     df = pd.read_csv("etiquetas.csv")
@@ -35,6 +49,26 @@ def barplot():
     plt.xlabel('Número de Juegos')
     plt.ylabel('Géneros')
     plt.show()
+barplot1()
+
+
+
+
+
+# FANATICAL
+
+
+
+
+
+
+# ENEBA
+
+
+
+
+
+
 
 
 # Composición, disponibilidad en plataformas.
@@ -68,21 +102,7 @@ def piechart():
     ax.axis("equal")
     plt.title("Disponibilidad por plataforma")
     plt.show()
-
-
 # Correlación entre variables género y reseña, precio y reseña
-def scatterplot1():
-    df = pd.read_csv("juegosSteam.csv")
-    df = df[df.metacritic.notnull()]
-    df = df[df["precio"]>0]
-    df = df[df["metacritic"] > 0]
-    sns.set_style("ticks")
-    gridobj = sns.lmplot(x="metacritic", y="precio", data=df, height=5, aspect=11/5)
-    gridobj.set(xlim=(55, 95), ylim=(0, 65))
-    plt.title("Regresión lineal simple")
-    plt.tight_layout()
-    plt.show()
-
 def scatterplot2():
     df = pd.read_csv("juegosSteam.csv")
     df = df[df.metacritic.notnull()]
@@ -94,10 +114,3 @@ def scatterplot2():
     plt.title("Regresión lineal simple")
     plt.tight_layout()
     plt.show()
-
-
-
-
-
-
-scatterplot1()
