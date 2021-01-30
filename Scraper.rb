@@ -198,9 +198,11 @@ class Scraper
       contenidoJuego = paginaJuego.read
       parsedJuego = Nokogiri::HTML(contenidoJuego)
 
-      precio = (parsedJuego.css(".p-3").css(".was-price").inner_text.gsub(",",".").to_i* 1.37121).round(2)
+      precio = (parsedJuego.css(".price-container").css(".was-price").inner_text.gsub("£","").to_i* 1.37121).round(2)
 
-      #puts precio
+
+
+
       plataformas = ""
       parsedJuego.css(".platforms-container").css(".svg-inline--fa").each do |p|
         platf = p.attribute("data-icon").to_s
@@ -221,14 +223,23 @@ class Scraper
             plataformas+="/ linux"
           end
         end
+
+
       end
 
+
+
       descripcion = parsedJuego.css(".section-margin-bottom").css("p").inner_text
+
+
 
       imagen = parsedJuego.css(".responsive-image").css("img").attribute("srcset").to_s.split(" ")[0]
 
       if precio!=0 then           #si no tiene precio, no es juego
-        origen = parsedJuego.css(".p-3").css(".drm-container").css("img").attribute("alt").value.to_s.split(" ")[0]
+
+        origen = parsedJuego.css(".drm-container").css("img").attribute("alt").value.to_s.split(" ")[0]
+
+
 
         genero= Set[]
         parsedJuego.css(".card-body").css(".col-sm-9").css(".text-capitalize").css("a").each do |g|
@@ -243,13 +254,11 @@ class Scraper
           end
         end
 
-
         juego=Juego.new(nombre,descuento,precio.to_s,plataformas,generos,href,imagen,descripcion,
                       "","","","","","",
                       "",origen)
         juego.toString
         juego.registrarFanatical
-
 
       end
 
