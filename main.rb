@@ -12,7 +12,7 @@ require "./ScraperFanatical"
 
 
 
-#------------Steam
+#------------Steam-Loayza
 
 #url
 urlSteam = "https://store.steampowered.com/search/?sort_by=&sort_order=0&page="
