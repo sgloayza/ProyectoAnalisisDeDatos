@@ -27,6 +27,8 @@ def scatterplot1():
 
     # presenta
     plt.title("Regresión lineal simple", fontsize=16, color='red')
+    plt.xlabel('Metacritic', fontsize=16, color='red')
+    plt.ylabel('Precio', fontsize=16, color='red')
     plt.tight_layout()
     plt.show()
 scatterplot1()
@@ -76,7 +78,7 @@ def barplot1():
 
     #presenta
     plt.show()
-#barplot1()
+barplot1()
 
 
 
