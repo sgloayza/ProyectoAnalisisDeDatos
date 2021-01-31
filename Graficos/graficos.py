@@ -31,7 +31,7 @@ def scatterplot1():
     plt.ylabel('Precio', fontsize=16, color='red')
     plt.tight_layout()
     plt.show()
-scatterplot1()
+#scatterplot1()
 # Ranking de géneros
 def barplot1():
 
@@ -78,7 +78,7 @@ def barplot1():
 
     #presenta
     plt.show()
-barplot1()
+#barplot1()
 
 
 
