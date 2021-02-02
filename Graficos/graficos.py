@@ -4,10 +4,14 @@ import matplotlib as mpl
 import matplotlib.pyplot as plt
 import seaborn as sns
 import warnings; warnings.filterwarnings(action='once')
-
 from matplotlib.ticker import FuncFormatter
+import squarify
+
+
+
 
 # STEAM
+
 # Correlación entre variables calificacion Metacritic y precio
 def scatterplot1():
 
@@ -18,12 +22,13 @@ def scatterplot1():
     df = df[df.metacritic.notnull()]
     df = df[df["precio"]>0]
     df = df[df["metacritic"] > 0]
+    df = df[0:3]
 
     # estilo
     sns.set_style("ticks")
 
     # variables y limites
-    gridobj = sns.lmplot(x="metacritic", y="precio", data=df, height=5, aspect=10/5)
+    gridobj = sns.lmplot(x="metacritic", y="precio", data=df, height=5, aspect=1)
     gridobj.set(xlim=(55,95), ylim=(0,65))
 
     # presenta
@@ -33,6 +38,7 @@ def scatterplot1():
     plt.tight_layout()
     plt.show()
 #scatterplot1()
+
 # Ranking de géneros
 def barplot1():
 
@@ -43,13 +49,13 @@ def barplot1():
     df = df.sort_values(by=['nroDeJuegos'], ascending=False)
 
     # escojo los 10 primeros
-    generos = df["nombreE"].values[0:10]
-    njuegos = df["nroDeJuegos"].values[0:10]
+    generos = df["nombreE"].values[0:3]
+    njuegos = df["nroDeJuegos"].values[0:3]
 
     fig, ax = plt.subplots()
 
     # tamano ventana
-    fig.set_size_inches(14,5)
+    fig.set_size_inches(8,4)
 
     # grosor de barras
     width = 0.5
@@ -58,7 +64,8 @@ def barplot1():
     ind = np.arange(len(njuegos))
 
     # estilos y limites
-    color = ["#0032FF", "#1D48FF", "#2D55FF", "#4A6CFF", "#607EFF", "#7690FF", "#889FFF", "#9EB0FF", "#AFBEFF", "#C4CFFF"]
+    # color = ["#0032FF", "#1D48FF", "#2D55FF", "#4A6CFF", "#607EFF", "#7690FF", "#889FFF", "#9EB0FF", "#AFBEFF", "#C4CFFF"]
+    color = ["#0032FF", "#607EFF", "#AFBEFF"]
     for i in ind:
         ax.barh(i,njuegos[i], width, color=color[i])
     ax.set_yticks(ind + width / 2)
@@ -71,7 +78,7 @@ def barplot1():
 
     # etiquetas sobre barras
     for i, v in enumerate(njuegos):
-        ax.text(v + 3, i + .25, str(v), color='#032F83', fontweight='bold')
+        ax.text(v, i+0.25, str(v), color='#032F83', fontweight='bold')
     plt.yticks(fontsize=10, rotation=25, color='black') #juegos nombres
     plt.title('Popularidad de los géneros en los juegos', fontsize=16, color='red')
     plt.xlabel('Número de Juegos', fontsize=16, color='red')
@@ -79,6 +86,14 @@ def barplot1():
 
     #presenta
     plt.show()
+#barplot1()
+
+
+
+
+
+
+
 
 # ENEBA
 
@@ -104,7 +119,7 @@ def treemap():
     plt.title('Top 10 Publishers')
     plt.axis('off')
     plt.show()
-
+#treemap()
 
 # Desviación: La variación de valores según género
 def dotplot():
@@ -180,10 +195,15 @@ def dotplot():
     plt.grid(linestyle='--', alpha=0.5)
     plt.xlim(-2.5, 2.5)
     plt.show()
-
-
 #dotplot()
-#treemap()
+
+
+
+
+
+
+
+
 
 # FANATICAL
 
@@ -201,7 +221,7 @@ def piechart():
 
     plt.show()
     print(desar)
-
+#piechart()
 
 def histogram():
     data = pd.read_csv("juegosFanatical.csv")
@@ -214,3 +234,4 @@ def histogram():
     plt.bar(x, precio)
     plt.xticks(x, nombres)
     plt.show()
+#histogram()
