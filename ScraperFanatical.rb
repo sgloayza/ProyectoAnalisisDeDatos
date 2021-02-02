@@ -50,12 +50,11 @@ class ScraperFanatical
       end
     end
 
-    juego = Juego.new(nombre,descuento,precio,"","","",imagen,descripcion,
+    juego = Juego.new(nombre,descuento,cambiarMoneda(precio),"","","",imagen,descripcion,
                       fechaLanzamiento,"","","",desarrollador,"",
                       "",origen,"",publisher)
     #juego.toString
     juego.registrarFanatical
-    puts nombre, precio, descuento, imagen
 
   end
 
@@ -72,6 +71,11 @@ class ScraperFanatical
     end
   end
 
+  def cambiarMoneda(precio)
+    gbp = (precio.slice!(1..-1)).to_f
+    usd = gbp * 1.37
+    return usd.round(2)
+  end
 
   def crearArchivoJuegos()
     CSV.open('Graficos/juegosFanatical.csv', 'wb') do |csv|
