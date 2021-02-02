@@ -1,11 +1,11 @@
 
 class Juego
-  attr_accessor :nombre, :imagen, :descuento, :precio, :href, :fechaLanzamiento, :plataformas, :resenia, :bloqueoDeEdad, :descripcion, :etiquetas, :desarrollador, :editor, :genero,:metacritic,:origen,:usuarioCompraron
+  attr_accessor :nombre,:imagen,:descuento,:precio,:href,:fechaLanzamiento,:plataformas,:resenia,:bloqueoDeEdad,:descripcion,:etiquetas,:desarrollador,:editor,:genero,:metacritic,:origen,:usuarioCompraron,:publisher
 
 
   def initialize(nombre,descuento,precio,plataformas,genero,href,imagen,descripcion,
                  fechaLanzamiento="",resenia="",bloqueoDeEdad="",etiquetas="",
-                 desarrollador="",editor="",metacritic="",origen="Steam",usuarioCompraron="")
+                 desarrollador="",editor="",metacritic="",origen="Steam",usuarioCompraron="",publisher)
     @nombre = nombre
     @descuento = descuento
     @precio = precio
@@ -23,6 +23,7 @@ class Juego
     @metacritic = metacritic
     @origen = origen
     @usuarioCompraron = usuarioCompraron
+    @publisher = publisher
   end
 
 
@@ -35,7 +36,7 @@ class Juego
 
   def registrarFanatical()
     CSV.open('Graficos/juegosFanatical.csv','a') do |csv|
-      csv << [@nombre,@descuento,@precio,@plataformas,@origen,@genero,@href,@imagen,@descripcion]
+      csv << [@nombre,@precio,@descuento,@origen,@desarrollador,@fechaLanzamiento,@imagen,@descripcion,@publisher]
     end
   end
 
@@ -64,8 +65,7 @@ class Juego
            "\nGénero= "+@genero+
            "\nMetacritic= "+@metacritic+
            "\nOrigen= "+@origen+
-           "\n@UsuarioCompraron= "+@usuarioCompraron
+           "\n@UsuarioCompraron= "+@usuarioCompraron+
+           "\n@Publisher= "+@publisher
   end
-
-
 end

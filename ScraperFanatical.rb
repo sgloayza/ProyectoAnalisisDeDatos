@@ -1,103 +1,88 @@
 
 class ScraperFanatical
 
-
-  def extraerDatosJuegos(url)
+  def extraerAuxiliar(url)
     pagina = open(url)
     contenido = pagina.read
     parsed = Nokogiri::HTML(contenido)
-    parsed.css(".card-container").each do |datos|
+    nombre = parsed.css(".w-100").css("h1.product-name").inner_text
+    descripcion = parsed.css(".section-margin-bottom.product-description").css("p")[0]
 
-      href = "https://www.fanatical.com"+datos.css(".faux-block-link__overlay-link").attribute("href").value.to_s
-
-      nombre = datos.css(".faux-block-link__overlay-link").inner_text
-
-      #puts href+" "+nombre
-
-      descuento = (datos.css(".card-saving").css("div").inner_text.gsub(/\s+/,"").gsub("Hasta", "").gsub("-", "").split("%")[0].to_i).to_s+"%"
-
-
-
-      paginaJuego = open(href)
-      contenidoJuego = paginaJuego.read
-      parsedJuego = Nokogiri::HTML(contenidoJuego)
-
-      precio = (parsedJuego.css(".price-container").css(".was-price").inner_text.gsub("£","").to_i* 1.37121).round(2)
-
-
-      plataformas = ""
-      parsedJuego.css(".platforms-container").css(".svg-inline--fa").each do |p|
-        platf = p.attribute("data-icon").to_s
-        if platf=="windows" then
-          plataformas+="windows "
-        end
-        if platf=="apple" then
-          if plataformas=="" then
-            plataformas+="mac "
-          else
-            plataformas+="/ mac"
-          end
-        end
-        if platf=="linux" then
-          if plataformas=="" then
-            plataformas+="linux "
-          else
-            plataformas+="/ linux"
-          end
-        end
-
-
-      end
-
-
-
-      descripcion = parsedJuego.css(".section-margin-bottom").css("p").inner_text
-
-
-
-      imagen = parsedJuego.css(".responsive-image").css("img").attribute("srcset").to_s.split(" ")[0]
-
-      if precio!=0 then           #si no tiene precio, no es juego
-
-        origen = parsedJuego.css(".drm-container").css("img").attribute("alt").value.to_s.split(" ")[0]
-
-
-
-        genero= Set[]
-        parsedJuego.css(".card-body").css(".col-sm-9").css(".text-capitalize").css("a").each do |g|
-          genero.add(g.inner_text.to_s)
-        end
-        generos = ""
-        genero.each do |gen|
-          if generos=="" then
-            generos+=gen
-          else
-            generos+=" / "+gen
-          end
-        end
-
-
-
-        juego=Juego.new(nombre,descuento,precio.to_s,plataformas,generos,href,imagen,descripcion,
-                      "","","","","","",
-                      "",origen,"")
-        juego.toString
-        juego.registrarFanatical
-
-        gets()
-      end
-
+    if (descripcion != nil)
+      descripcion = descripcion.inner_text
+    else
+      descripcion = ""
     end
 
+    precio = parsed.css(".p-3.pl-md-1.pl-lg-3.card-body").css(".price-container").css(".price").css("span").inner_text
+    descuento = parsed.css(".saving-percentage").inner_text
+    descuento = descuento.slice(1..-1)
+    imagen = parsed.css(".responsive-image.responsive-image--16by9").css("img.img-fluid.img-full.card-img-top")
+
+    if (imagen.attribute("src") != nil)
+      imagen = imagen.attribute("src")
+    else
+      imagen = ""
+    end
+
+    gamedetails = parsed.css(".mb-4.p-3.product-details.card").css(".card-body").css(".game-details").css(".row.product-details")
+
+    origen = ""
+    publisher = ""
+    desarrollador = ""
+    fechaLanzamiento = ""
+
+    for i in 0..gamedetails.length
+      etiqueta = gamedetails.css("dt.col-sm-3.col-md-4")[i]
+      if (etiqueta != nil)
+        if(etiqueta.inner_text == "Platform:")
+          origen = gamedetails.css("dd.col-sm-9.col-md-8")[i].inner_text
+        end
+        if(etiqueta.inner_text == "Publisher:")
+          publisher = gamedetails.css("dd.col-sm-9.col-md-8")[i].inner_text
+        end
+        if(etiqueta.inner_text == "Developer:")
+          desarrollador = gamedetails.css("dd.col-sm-9.col-md-8")[i].inner_text
+        end
+        if(etiqueta.inner_text == "Release Date:")
+          fechaLanzamiento = gamedetails.css("dd.col-sm-9.col-md-8")[i].inner_text
+        end
+      end
+    end
+
+    juego = Juego.new(nombre,descuento,precio,"","","",imagen,descripcion,
+                      fechaLanzamiento,"","","",desarrollador,"",
+                      "",origen,"",publisher)
+    #juego.toString
+    juego.registrarFanatical
+    puts nombre, descripcion, precio, descuento, imagen
+
+  end
+
+
+  def extraer(url, link)
+    card = open(url)
+    info = card.read
+    parsed = Nokogiri::HTML(info)
+    data = parsed.css("a.faux-block-link__overlay-link").each do |href|
+      arr = (href.attribute("href").value).split("/")
+      if(arr[2] == "game")
+        extraerAuxiliar(link + href.attribute("href").value)
+      end
+    end
   end
 
 
   def crearArchivoJuegos()
     CSV.open('Graficos/juegosFanatical.csv', 'wb') do |csv|
-      csv << %w[nombre descuento precio plataformas origen genero href imagen descripcion]
+      csv << %w[nombre precio descuento origen desarrollador fechaLanzamiento imagen descripcion publisher]
     end
   end
 
-
 end
-
+'''
+for i in 1..5
+  url = $link + "/en/search?page=" + i.to_s + "&types=game"
+  extraer(url, $link)
+end
+'''
