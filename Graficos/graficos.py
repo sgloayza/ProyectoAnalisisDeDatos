@@ -3,10 +3,9 @@ import pandas as pd
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 import seaborn as sns
-import warnings; warnings.filterwarnings(action='once')
 from matplotlib.ticker import FuncFormatter
 import squarify
-
+import warnings; warnings.filterwarnings(action='once')
 
 
 
@@ -97,6 +96,9 @@ def barplot1():
 
 # ENEBA
 
+# Gráficos de Eneba
+
+
 # Composición: Treemap del top 10 de publicadores de videojuegos
 def treemap():
     # Leemos el csv.
@@ -105,7 +107,7 @@ def treemap():
     # Agrupamos por publisher y contamos cuántos hay por clase.
     df = df_raw.groupby('Publisher').size().reset_index(name='counts')
     # Sort de los datos
-    df = df.sort_values(by=["counts"], ascending=False)[0:10]
+    df = df.sort_values(by=["counts"], ascending=False)[0:3]
     # Agregamos las etiquetas
     labels = df.apply(lambda x: str(x[0]) + "\n (" + str(x[1]) + ")", axis=1)
     sizes = df['counts'].values.tolist()
@@ -114,12 +116,12 @@ def treemap():
 
     # Graficamos el treemap
     plt.figure(figsize=(12, 8), dpi=80)
-    squarify.plot(sizes=sizes, label=labels, text_kwargs={'fontsize': 10}, color=colors, alpha=.8)
+    squarify.plot(sizes=sizes, label=labels, text_kwargs={'fontsize': 20}, color=colors, alpha=.8)
 
-    plt.title('Top 10 Publishers')
+    plt.title('Top 3 Publishers')
     plt.axis('off')
     plt.show()
-#treemap()
+
 
 # Desviación: La variación de valores según género
 def dotplot():
@@ -165,6 +167,21 @@ def dotplot():
     # Borra columna
     del df["ValoracionUsuario"]
 
+    # Error en el csv, lineas con lenguaje en lugar de género
+    df = df[df.Generos != "Russian"]
+
+    df = df[df.Generos != "English"]
+
+    df = df[df.Generos != "Italian"]
+
+    df = df[df.Generos != "Portuguese"]
+
+    df = df[df.Generos != "Spanish"]
+
+    df = df[df.Generos != "German"]
+
+    df = df[df.Generos != "French"]
+
     df = df.sort_values(by=["mean"], ascending=False)
 
     x = df.loc[:, ['mean']]
@@ -195,15 +212,9 @@ def dotplot():
     plt.grid(linestyle='--', alpha=0.5)
     plt.xlim(-2.5, 2.5)
     plt.show()
+
 #dotplot()
-
-
-
-
-
-
-
-
+#treemap()
 
 # FANATICAL
 
