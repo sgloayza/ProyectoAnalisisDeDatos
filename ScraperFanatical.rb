@@ -19,7 +19,7 @@ class ScraperFanatical
     descuento = descuento.slice(1..-1)
     imagen = parsed.css(".responsive-image.responsive-image--16by9").css("img.img-fluid.img-full.card-img-top")
 
-    if (imagen.attribute("src") != nil)
+    if (imagen == nil)
       imagen = imagen.attribute("src")
     else
       imagen = ""
@@ -55,7 +55,7 @@ class ScraperFanatical
                       "",origen,"",publisher)
     #juego.toString
     juego.registrarFanatical
-    puts nombre, descripcion, precio, descuento, imagen
+    puts nombre, precio, descuento, imagen
 
   end
 
