@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import warnings; warnings.filterwarnings(action='once')
 
+from matplotlib.ticker import FuncFormatter
 
 # STEAM
 # Correlación entre variables calificacion Metacritic y precio
@@ -188,44 +189,28 @@ def dotplot():
 
 # Composición, disponibilidad en plataformas.
 def piechart():
-    df = pd.read_csv("juegosSteam.csv")
+    data = pd.read_csv("juegosFanatical.csv")
+    desar = data.groupby('desarrollador').size().reset_index(name='counts')
+    desar = desar.sort_values(by=["counts"], ascending=False)[0:15]
+    nombres = desar["desarrollador"].values.tolist()
+    numeros = desar["counts"].values.tolist()
+    fig1, ax1 = plt.subplots()
+    ax1.pie(numeros, labels=nombres, autopct='%1.2f%%',
+            shadow=True, startangle=90)
+    ax1.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
 
-    plataformas = df["plataformas"].values
-
-    wind = 0
-    mac = 0
-    linux = 0
-
-    for i, l in enumerate(plataformas):
-        arr = l.split("/")
-        if(len(arr)==3):
-            wind = wind + 1
-            mac = mac + 1
-            linux = linux + 1
-        if (len(arr) == 2):
-            wind = wind + 1
-            mac = mac + 1
-        if (len(arr) == 1):
-            wind = wind + 1
-
-    labels = "Windows", "Mac", "Linux"
-    sizes = [wind,mac,linux]
-    explode = (0.1,0,0)
-
-    fig, ax = plt.subplots()
-    ax.pie(sizes, explode=explode, labels=labels, autopct='%1.1f%%', shadow=True, startangle=90)
-    ax.axis("equal")
-    plt.title("Disponibilidad por plataforma")
     plt.show()
-# Correlación entre variables género y reseña, precio y reseña
-def scatterplot2():
-    df = pd.read_csv("juegosSteam.csv")
-    df = df[df.metacritic.notnull()]
-    df = df[df["precio"]>0]
-    df = df[df["metacritic"] > 0]
-    sns.set_style("ticks")
-    gridobj = sns.lmplot(x="metacritic", y="precio", data=df, height=5, aspect=11/5)
-    gridobj.set(xlim=(55, 95), ylim=(0, 65))
-    plt.title("Regresión lineal simple")
-    plt.tight_layout()
+    print(desar)
+
+
+def histogram():
+    data = pd.read_csv("juegosFanatical.csv")
+    data.drop_duplicates(subset="nombre", keep="first", inplace=True)
+    data = data.sort_values(by=['precio'], ascending=False)
+    x = np.arange(3)
+    nombres = data["nombre"].values.tolist()[0:3]
+    precio = data['precio'].values.tolist()[0:3]
+    fig, ax = plt.subplots()
+    plt.bar(x, precio)
+    plt.xticks(x, nombres)
     plt.show()
