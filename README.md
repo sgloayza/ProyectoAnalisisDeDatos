@@ -22,9 +22,12 @@ Gráficos de Eneba
 	![imagen](Capturas/Eneba/4.png)
 
 Gráficos de Steam
-
+	![imagen](Capturas/Eneba/1.jpg)
+	![imagen](Capturas/Eneba/2.jpg)
+	
 Gráficos de Fanatical
-
+	![imagen](Capturas/Eneba/5.png)
+	![imagen](Capturas/Eneba/6.png)
 ## Integrantes
 
 - Gabriela Mora
