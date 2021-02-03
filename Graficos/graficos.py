@@ -36,6 +36,7 @@ def scatterplot1():
     plt.ylabel('Precio', fontsize=16, color='red')
     plt.tight_layout()
     plt.show()
+
 #scatterplot1()
 
 # Ranking de géneros
@@ -85,13 +86,8 @@ def barplot1():
 
     #presenta
     plt.show()
+
 #barplot1()
-
-
-
-
-
-
 
 
 # ENEBA
@@ -214,6 +210,7 @@ def dotplot():
     plt.show()
 
 #dotplot()
+
 #treemap()
 
 # FANATICAL
@@ -232,6 +229,7 @@ def piechart():
 
     plt.show()
     print(desar)
+
 #piechart()
 
 def histogram():
@@ -245,4 +243,87 @@ def histogram():
     plt.bar(x, precio)
     plt.xticks(x, nombres)
     plt.show()
+
 #histogram()
+
+# Análisis de datos entre Steam y Fanatical
+
+# Diferencia entre precios de Steam y Fanatical
+def areachart():
+    # Leer archivos csv
+    fanat = pd.read_csv("juegosFanatical.csv")
+
+    steam = pd.read_csv("juegosSteam.csv")
+
+
+    # Filtrar a 3 columnas
+    fanat = fanat[["nombre", "precio", "descuento"]]
+
+    steam = steam[["nombre", "precio", "descuento"]]
+
+
+    # Unir 2 csv por nombre de juego
+    result = steam.merge(fanat, left_on="nombre", right_on="nombre")
+
+
+    # Cambiar los valores nulos por 0
+    result["descuento_y"] = result["descuento_y"].fillna(0)
+
+
+    # Quitar valores repetidos
+    result.drop_duplicates(subset="nombre", keep="first", inplace=True)
+
+
+    # Sort de valores
+    result = result.sort_values(by=["precio_x"])
+
+
+    # Preparación de los datos
+    nombres = result["nombre"].values.tolist()
+
+    precios_steam = result["precio_x"].values.tolist()
+
+    precios_fanat = result["precio_y"].values.tolist()
+
+    colores = ["tab:red", "tab:blue"]
+
+    columnas = ["Steam", "Fanatical"]
+
+
+    # Dibujar el gráfico
+    fig, ax = plt.subplots(1, 1, figsize=(12, 10), dpi=70)
+
+    ax.fill_between(nombres, y1=precios_steam, y2=0, label=columnas[1], alpha=0.5, color=colores[1], linewidth=2)
+
+    ax.fill_between(nombres, y1=precios_fanat, y2=0, label=columnas[0], alpha=0.5, color=colores[0], linewidth=2)
+
+
+    # Decoraciones
+    ax.set_title("Diferencia de precios entre Steam y Fanatical", fontsize=20)
+
+    ax.set(ylim=[0, 80])
+
+    ax.legend(loc="best", fontsize=12)
+
+    plt.xticks(nombres[0:65:3], fontsize=10, rotation=90)
+
+    plt.yticks(np.arange(0, 81, 5), fontsize=10)
+
+    plt.legend(bbox_to_anchor=(1, 1), loc='upper left')
+
+
+    # Afinar bordes
+    plt.gca().spines["top"].set_alpha(0)
+
+    plt.gca().spines["bottom"].set_alpha(.3)
+
+    plt.gca().spines["right"].set_alpha(0)
+
+    plt.gca().spines["left"].set_alpha(.2)
+
+    plt.gcf().subplots_adjust(bottom=0.35, left=0.05, right=0.89)
+
+    plt.show()
+
+
+#areachart()
