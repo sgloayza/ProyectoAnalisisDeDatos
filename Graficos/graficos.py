@@ -327,3 +327,66 @@ def areachart():
 
 
 #areachart()
+
+# Diferencia entre precios de Steam y Fanatical
+def scatterplot2():
+    # Leer archivos csv
+    fanat = pd.read_csv("juegosFanatical.csv")
+
+    steam = pd.read_csv("juegosSteam.csv")
+
+
+    # Filtrar a 2 columnas
+    fanat = fanat[["nombre", "precio"]]
+
+    steam = steam[["nombre", "precio"]]
+
+
+    # Unir 2 csv por nombre de juego
+    result = steam.merge(fanat, left_on="nombre", right_on="nombre")
+
+
+    # Quitar valores repetidos
+    result.drop_duplicates(subset="nombre", keep="first", inplace=True)
+
+
+    # Sort de valores
+    result = result.sort_values(by=["precio_x"])
+
+
+    # Diferencia de valores
+    result["diferencia"] = result["precio_y"] - result["precio_x"]
+
+    result = result[["nombre", "precio_x", "diferencia"]]
+
+
+    # Preparación de los datos
+    diferencia_fanatical_pos = result[result["diferencia"] > 0]
+
+    diferencia_fanatical_neg = result[result["diferencia"] <= 0]
+
+
+    # Graficar
+    fig = plt.figure(figsize=(8, 5))
+
+    ax = fig.gca()
+
+    ax.scatter(diferencia_fanatical_pos["precio_x"].values.tolist(), diferencia_fanatical_pos["diferencia"].values.tolist(), marker="^", c="red", label=("Steam: " + str(diferencia_fanatical_pos["nombre"].count())))
+
+    ax.scatter(diferencia_fanatical_neg["precio_x"].values.tolist(), diferencia_fanatical_neg["diferencia"].values.tolist(), marker="v", c="blue", label=("Fanatical: " + str(diferencia_fanatical_neg["nombre"].count())))
+
+    leg = ax.legend()
+
+    ax.legend(loc='upper right', frameon=False)
+
+
+    # Decoración
+    plt.title("Diferencia de precios")
+
+    plt.xlabel("Precio Steam")
+
+    plt.ylabel("Diferencia Fanatical")
+
+    plt.show()
+
+#scatterplot2()
